@@ -1,5 +1,5 @@
 {
-  "name": "E-Ink Todo",
-  "description": "A lightweight, minimalist to-do list application inspired by command-line tools for e-ink devices. It features a clean, high-contrast interface, local storage, and an optional AI-powered feature to break down complex tasks into smaller steps.",
+  "name": "kindle-todo (Shell & Web UI)",
+  "description": "Aplicativo de tarefas com duas interfaces: uma de linha de comando (shell) para Kterm e uma gráfica (web) para o navegador do Kindle. Ambas podem ser lançadas via KUAL.",
   "requestFramePermissions": []
 }
