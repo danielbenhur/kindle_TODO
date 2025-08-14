@@ -1,0 +1,5 @@
+{
+  "name": "E-Ink Todo",
+  "description": "A lightweight, minimalist to-do list application inspired by command-line tools for e-ink devices. It features a clean, high-contrast interface, local storage, and an optional AI-powered feature to break down complex tasks into smaller steps.",
+  "requestFramePermissions": []
+}
