@@ -1,84 +1,73 @@
 # kindle-todo (Shell & Web UI)
 
-Lightweight terminal "To Do" app for Kindle (KUAL/Kterm) and minimal Linux systems, now with a parallel Web UI version.
+Um aplicativo de tarefas leve com duas interfaces: uma de linha de comando robusta para Kterm e uma interface gráfica moderna para o navegador.
 
-This project contains two versions:
-1.  **Shell Version**: A POSIX shell implementation with minimal dependencies, designed for Kterm.
-2.  **Web UI Version**: A modern React-based graphical interface, designed to run offline in the Kindle's browser.
-
-Both versions can be launched via KUAL.
+Este projeto foi reestruturado para ser o mais flexível possível:
+1.  **Web UI (Padrão)**: Uma interface web moderna baseada em React que funciona **instantaneamente** no preview do Google AI Studio e em qualquer navegador, sem necessidade de instalação ou build.
+2.  **Shell Version**: A implementação original em POSIX shell, agora organizada na pasta `shell/`, ideal para uso em terminais de baixa performance como o Kterm no Kindle.
 
 ---
 
-## 1. Shell Version
+## 1. Web UI Version (Visualização Instantânea)
 
-A fast, reliable command-line to-do manager.
+A maneira mais fácil de usar o aplicativo. A interface gráfica é carregada diretamente no navegador.
 
-### Features
-- POSIX shell implementation; minimal dependencies (coreutils, awk, sed, date).
-- Week-based storage in `data/weeks/YYYY-WW.md` as simple lines.
-- Commands: add, list, done, rm, edit, plugins, calendar.
-- Plugin system: drop executable scripts in `plugins/`.
-- Designed for e-ink terminals and low-resource devices.
+### Como Funciona
+Não é necessário `npm install` ou `npm run build` para testar. O `index.html` usa CDNs para carregar React, Tailwind CSS e Babel, que compilam e executam o aplicativo em tempo real no seu navegador.
 
-### Shell Version Installation & Usage
+### Recursos
+- Interface moderna com React para adicionar, listar e editar tarefas.
+- Visualização de calendário.
+- Funcionalidade "Smart Add" que usa a API Gemini para quebrar tarefas complexas em subtarefas.
+- Os dados são salvos localmente no `localStorage` do navegador.
 
-1. Copy the project files (`bin`, `lib`, `plugins`, `data`) to your device, e.g., `/mnt/us/apps/kindle-todo`.
-2. Ensure the main script is executable:
-   ```sh
-   chmod +x /mnt/us/apps/kindle-todo/bin/todo
-   ```
-3. **KUAL / Kterm Integration**:
-   a. Copy `kual_launcher_shell.sh` to a KUAL extensions folder, e.g., `/mnt/us/extensions/todo-shell/`.
-   b. Make it executable: `chmod +x /mnt/us/extensions/todo-shell/kual_launcher_shell.sh`.
-   c. Edit the `APP_DIR` inside the launcher script to point to your installation path (`/mnt/us/apps/kindle-todo`).
-   d. Launch from the KUAL menu. It will open Kterm with the `todo` app running.
+### Executando no Kindle (Web UI)
 
----
+Existem duas maneiras de colocar a UI web no Kindle:
 
-## 2. Web UI Version
+#### Método A: Rápido e Fácil (Sem Build)
+1.  Copie os seguintes arquivos e pastas para o seu Kindle, por exemplo, em `/mnt/us/apps/todo-web/`:
+    - `index.html`
+    - `index.css`
+    - `index.tsx`
+    - `App.tsx`, `types.ts`, `constants.ts`
+    - as pastas `components/`, `context/`, `services/`
+2.  Use o launcher `shell/kual_launcher_web.sh` (ajuste o caminho do arquivo nele) para abrir o `index.html` no navegador do Kindle.
 
-A rich graphical interface that runs offline in the Kindle's built-in browser.
-
-### Features
-- Modern React UI with components for adding, listing, and editing tasks.
-- Calendar view to visualize tasks.
-- "Smart Add" feature using Gemini API to break down tasks.
-- Data is stored locally in the browser's localStorage.
-- Packaged as a fully offline-capable static website.
-
-### Web Version Installation & Usage
-
-#### Step A: Build the Web App (on your PC)
-
-You need Node.js and npm to build the web app.
-
-1.  **Install dependencies**:
+#### Método B: Otimizado (com Build)
+Este método cria uma versão mais rápida e otimizada, ideal para o Kindle.
+1.  **No seu PC**, instale as dependências e construa o projeto:
     ```sh
     npm install
-    ```
-2.  **Build the static files**:
-    ```sh
     npm run build
     ```
-    This will create a `dist/` directory containing `index.html` and other assets.
-
-#### Step B: Deploy to Kindle
-
-1. Copy the contents of the `dist/` directory to your device, e.g., `/mnt/us/apps/kindle-todo/web-ui/`.
-2. **KUAL / Browser Integration**:
-   a. Copy `kual_launcher_web.sh` to a KUAL extensions folder, e.g., `/mnt/us/extensions/todo-web/`.
-   b. Make it executable: `chmod +x /mnt/us/extensions/todo-web/kual_launcher_web.sh`.
-   c. Edit the `HTML_FILE_PATH` inside the launcher to point to your `index.html` file (`/mnt/us/apps/kindle-todo/web-ui/index.html`).
-   d. Launch from the KUAL menu. It will open the Kindle's browser directly to the app.
+2.  Isso criará uma pasta `dist/`. Copie o **conteúdo** desta pasta para o seu Kindle (ex: `/mnt/us/apps/todo-web/`).
+3.  Use o launcher `shell/kual_launcher_web.sh` para abrir o `index.html` a partir dessa pasta.
 
 ---
 
-## Data format (Shell version)
+## 2. Shell Version
 
-* Each line in weekly file: `id|YYYY-MM-DD|status|priority|tags|text`
-* Files located at `data/weeks/YYYY-WW.md` for easy syncing.
+Uma interface de linha de comando rápida e confiável, localizada na pasta `shell/`.
 
-## License
+### Recursos
+- Implementação em POSIX shell com dependências mínimas (coreutils, awk, sed, date).
+- Armazenamento em arquivos Markdown semanais em `shell/data/weeks/`.
+- Comandos: `add`, `list`, `done`, `rm`, `edit`.
+
+### Executando no Kindle (Shell Version)
+
+1.  Copie a pasta `shell/` inteira para o seu dispositivo, por exemplo, para `/mnt/us/apps/todo-shell/`.
+2.  Certifique-se de que o script principal é executável:
+    ```sh
+    chmod +x /mnt/us/apps/todo-shell/bin/todo
+    ```
+3.  **Integração com KUAL/Kterm**:
+    a. Copie `shell/kual_launcher_shell.sh` para uma pasta de extensões do KUAL.
+    b. Torne-o executável: `chmod +x /path/to/kual/extensions/launcher.sh`.
+    c. Edite o `APP_DIR` dentro do launcher para apontar para o seu diretório de instalação (ex: `/mnt/us/apps/todo-shell`).
+    d. Inicie pelo menu do KUAL. Ele abrirá o Kterm com o aplicativo de tarefas.
+
+## Licença
 
 MIT
